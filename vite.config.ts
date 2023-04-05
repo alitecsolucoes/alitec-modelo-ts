@@ -1,4 +1,4 @@
-import { defineConfig, UserConfigExport } from "vite";
+import { defineConfig, PluginOption, UserConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
 import { Options, terser } from "rollup-plugin-terser";
@@ -40,8 +40,14 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
   terserOptions.compress = { drop_console: isProduction };
   visualizerOptions.open = isProduction;
 
-  const config: UserConfigExport = {
-    plugins: [vue(), terser(terserOptions), visualizer(visualizerOptions)],
+  const vuePlugin = vue();
+  // @ts-ignore
+  const terserPlugin: PluginOption = terser(terserOptions);
+  // @ts-ignore
+  const visualizerPlugin: PluginOption = visualizer(visualizerOptions);
+
+  const config: UserConfig = {
+    plugins: [vuePlugin, terserPlugin, visualizerPlugin],
     resolve: {
       alias: [
         {
